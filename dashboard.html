@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art Fest Management Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+    }
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #2C3E50;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+    .sidebar a {
+      text-decoration: none;
+      color: white;
+      padding: 10px 20px;
+      display: block;
+      transition: background 0.3s;
+    }
+    .sidebar a:hover {
+      background: #34495E;
+    }
+    .main {
+      margin-left: 220px;
+      padding: 20px;
+    }
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Art Fest</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="team-master.html">Team Master</a>
+    <a href="class-master.html">Class Master</a>
+    <a href="category-master.html">Category Master</a>
+    <a href="competition-category-master.html">Competition Category</a>
+    <a href="participation-type-master.html">Participation Type</a>
+    <a href="position-master.html">Position Master</a>
+    <a href="grade-master.html">Grade Master</a>
+    <a href="venue-master.html">Venue Master</a>
+  </div>
+
+  <div class="main">
+    <h1>Dashboard</h1>
+    <p>Welcome to the Art Fest Management System.</p>
+
+    <div class="card-container">
+      <div class="card" onclick="goTo('team-master.html')">Team Master</div>
+      <div class="card" onclick="goTo('class-master.html')">Class Master</div>
+      <div class="card" onclick="goTo('category-master.html')">Category Master</div>
+      <div class="card" onclick="goTo('competition-category-master.html')">Competition Category</div>
+      <div class="card" onclick="goTo('participation-type-master.html')">Participation Type</div>
+      <div class="card" onclick="goTo('position-master.html')">Position Master</div>
+      <div class="card" onclick="goTo('grade-master.html')">Grade Master</div>
+      <div class="card" onclick="goTo('venue-master.html')">Venue Master</div>
+    </div>
+  </div>
+
+  <script>
+    function goTo(page) {
+      window.location.href = page;
+    }
+  </script>
+</body>
+</html>
