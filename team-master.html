@@ -1,128 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Team Master</title>
+  <meta charset="UTF-8">
+  <title>Team Master | Art Fest Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #f9f9f9;
+      background-color: #f4f6f8;
+      color: #333;
     }
-
     .sidebar {
       width: 220px;
       height: 100vh;
-      background: #2C3E50;
-      color: white;
       position: fixed;
       top: 0;
       left: 0;
+      background-color: #2C3E50;
+      color: white;
       display: flex;
       flex-direction: column;
       padding: 20px 0;
     }
-
     .sidebar h2 {
       text-align: center;
+      font-size: 1.5rem;
       margin-bottom: 20px;
-      font-size: 1.5em;
     }
-
     .sidebar a {
-      text-decoration: none;
       color: white;
-      padding: 10px 20px;
+      text-decoration: none;
+      padding: 12px 20px;
       display: block;
       transition: background 0.3s;
     }
-
-    .sidebar a:hover,
-    .sidebar a.active {
-      background: #34495E;
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #34495E;
+      border-left: 4px solid #1abc9c;
     }
-
     .main {
       margin-left: 220px;
-      padding: 30px 40px;
+      padding: 30px;
     }
-
     h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
+      margin-top: 0;
+      font-size: 1.8rem;
     }
-
-    form {
+    .form-card {
       background: white;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      max-width: 500px;
-      margin-bottom: 40px;
+      max-width: 600px;
+      margin-bottom: 30px;
     }
-
+    .form-group {
+      margin-bottom: 16px;
+    }
     label {
       display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-      color: #333;
+      margin-bottom: 6px;
+      font-weight: 500;
     }
-
-    input[type="text"] {
+    input {
       width: 100%;
-      padding: 10px;
+      padding: 10px 12px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      font-size: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
     }
-
     button {
-      background-color: #2C3E50;
-      color: white;
+      padding: 10px 18px;
+      background-color: #1abc9c;
       border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 14px;
     }
-
     button:hover {
-      background-color: #34495E;
+      background-color: #17a589;
     }
 
-    .grid-report {
+    .grid-cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 20px;
     }
 
-    .report-card {
+    .team-card {
       background: white;
-      padding: 15px 20px;
+      padding: 16px;
       border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07);
     }
-
-    .report-card h3 {
-      margin: 0 0 5px;
-      font-size: 16px;
+    .team-card h3 {
+      margin: 0;
       color: #2C3E50;
     }
-
-    .report-card p {
-      margin: 0;
-      font-size: 14px;
-      color: #555;
+    .team-info {
+      margin-top: 10px;
+      line-height: 1.5;
+      font-size: 0.95rem;
     }
+
   </style>
 </head>
 <body>
+
   <div class="sidebar">
     <h2>Art Fest</h2>
     <a href="dashboard.html">Dashboard</a>
-    <a href="team-master.html" class="active">Team Master</a>
+    <a class="active" href="team-master.html">Team Master</a>
     <a href="class-master.html">Class Master</a>
     <a href="category-master.html">Category Master</a>
     <a href="competition-category-master.html">Competition Category</a>
@@ -134,53 +127,59 @@
 
   <div class="main">
     <h1>Team Master</h1>
-    <form id="teamForm">
-      <label for="teamName">Team Name</label>
-      <input type="text" id="teamName" name="teamName" required />
 
-      <label for="teamCode">Team Code</label>
-      <input type="text" id="teamCode" name="teamCode" required />
-
-      <button type="submit">Save Team</button>
-    </form>
-
-    <div class="grid-report" id="teamReports">
-      <!-- Example card -->
-      <!--
-      <div class="report-card">
-        <h3>PMNA</h3>
-        <p>Code: PMNA</p>
+    <div class="form-card">
+      <div class="form-group">
+        <label for="teamName">Team Name</label>
+        <input type="text" id="teamName" placeholder="Enter team name">
       </div>
-      -->
+      <div class="form-group">
+        <label for="teamCode">Team Code</label>
+        <input type="text" id="teamCode" placeholder="Enter team code">
+      </div>
+      <div class="form-group">
+        <label for="chestStart">Chest Number Starts From</label>
+        <input type="number" id="chestStart" placeholder="e.g., 101">
+      </div>
+      <button onclick="addTeam()">Add Team</button>
+    </div>
+
+    <div class="grid-cards" id="teamCards">
+      <!-- Grid-style team cards will appear here -->
     </div>
   </div>
 
   <script>
-    const teamForm = document.getElementById('teamForm');
-    const teamReports = document.getElementById('teamReports');
-    let teamList = [];
+    const teamCards = document.getElementById('teamCards');
 
-    teamForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const teamName = document.getElementById('teamName').value.trim();
-      const teamCode = document.getElementById('teamCode').value.trim();
-      if (!teamName || !teamCode) return;
+    function addTeam() {
+      const name = document.getElementById('teamName').value.trim();
+      const code = document.getElementById('teamCode').value.trim();
+      const chest = document.getElementById('chestStart').value.trim();
 
-      teamList.push({ teamName, teamCode });
-      renderTeams();
+      if (!name || !code || !chest) {
+        alert("Please fill all fields.");
+        return;
+      }
 
-      teamForm.reset();
-    });
+      const card = document.createElement('div');
+      card.className = 'team-card';
+      card.innerHTML = `
+        <h3>${name}</h3>
+        <div class="team-info">
+          <strong>Code:</strong> ${code}<br>
+          <strong>Chest Start:</strong> ${chest}
+        </div>
+      `;
 
-    function renderTeams() {
-      teamReports.innerHTML = '';
-      teamList.forEach(team => {
-        const card = document.createElement('div');
-        card.className = 'report-card';
-        card.innerHTML = `<h3>${team.teamName}</h3><p>Code: ${team.teamCode}</p>`;
-        teamReports.appendChild(card);
-      });
+      teamCards.appendChild(card);
+
+      // Clear inputs
+      document.getElementById('teamName').value = '';
+      document.getElementById('teamCode').value = '';
+      document.getElementById('chestStart').value = '';
     }
   </script>
+
 </body>
 </html>
