@@ -1,227 +1,164 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Team Master | Art Fest Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>Team Master</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #f4f6f8;
-      color: #333;
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
-    .sidebar {
-      width: 220px;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: #2C3E50;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      padding: 20px 0;
-    }
-    .sidebar h2 {
-      text-align: center;
-      font-size: 1.5rem;
+
+    h2 {
       margin-bottom: 20px;
     }
-    .sidebar a {
-      color: white;
-      text-decoration: none;
-      padding: 12px 20px;
-      display: block;
-      transition: background 0.3s;
-    }
-    .sidebar a:hover, .sidebar a.active {
-      background-color: #34495E;
-      border-left: 4px solid #1abc9c;
-    }
-    .main {
-      margin-left: 220px;
-      padding: 30px;
-    }
-    h1 {
-      margin-top: 0;
-      font-size: 1.8rem;
-    }
-    .form-card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      max-width: 600px;
-      margin-bottom: 30px;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
+
     label {
       display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    button {
-      padding: 10px 18px;
-      background-color: #1abc9c;
-      border: none;
-      color: white;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #17a589;
-    }
-    .grid-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    .team-card {
-      background: white;
-      padding: 16px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07);
-    }
-    .team-card h3 {
-      margin: 0;
-      color: #2C3E50;
-    }
-    .team-info {
       margin-top: 10px;
-      line-height: 1.5;
-      font-size: 0.95rem;
+    }
+
+    input, button {
+      padding: 8px;
+      margin-top: 5px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    table {
+      margin-top: 30px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    .message {
+      margin-top: 15px;
+      color: green;
+    }
+
+    .error {
+      color: red;
     }
   </style>
 </head>
 <body>
+  <h2>Team Master</h2>
 
-  <div class="sidebar">
-    <h2>Art Fest</h2>
-    <a href="dashboard.html">Dashboard</a>
-    <a class="active" href="team-master.html">Team Master</a>
-    <a href="class-master.html">Class Master</a>
-    <a href="category-master.html">Category Master</a>
-    <a href="competition-category-master.html">Competition Category</a>
-    <a href="participation-type-master.html">Participation Type</a>
-    <a href="position-master.html">Position Master</a>
-    <a href="grade-master.html">Grade Master</a>
-    <a href="venue-master.html">Venue Master</a>
-  </div>
+  <label for="teamName">Team Name:</label>
+  <input type="text" id="teamName" />
 
-  <div class="main">
-    <h1>Team Master</h1>
+  <label for="teamCode">Team Code:</label>
+  <input type="text" id="teamCode" />
 
-    <div class="form-card">
-      <div class="form-group">
-        <label for="teamName">Team Name</label>
-        <input type="text" id="teamName" placeholder="Enter team name">
-      </div>
-      <div class="form-group">
-        <label for="teamCode">Team Code</label>
-        <input type="text" id="teamCode" placeholder="Enter team code">
-      </div>
-      <div class="form-group">
-        <label for="chestStart">Chest Number Starts From</label>
-        <input type="number" id="chestStart" placeholder="e.g., 101">
-      </div>
-      <button onclick="addTeam()">Add Team</button>
-    </div>
+  <label for="chestNumber">Chest Number Start From:</label>
+  <input type="number" id="chestNumber" />
 
-    <div class="grid-cards" id="teamCards">
-      <!-- Team cards appear here -->
-    </div>
-  </div>
+  <button onclick="addTeam()">Add Team</button>
+
+  <div id="message" class="message"></div>
+
+  <table id="teamTable">
+    <thead>
+      <tr>
+        <th>Team Name</th>
+        <th>Team Code</th>
+        <th>Chest Number Start From</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbwM-_pZCeLqtHdwKOKlxwhUA2QsEFbLiUfUekM-IWnLh0N5xpFDpO_jtVuE_5QYnvog/exec"; // Replace with actual deployment URL
+    const API_URL = "https://script.google.com/macros/s/AKfycbwM-_pZCeLqtHdwKOKlxwhUA2QsEFbLiUfUekM-IWnLh0N5xpFDpO_jtVuE_5QYnvog/exec";
 
-  async function fetchTeams() {
-    try {
-      const res = await fetch(`${API_URL}?type=team`);
-      const data = await res.json();
-
-      const teamCards = document.getElementById('teamCards');
-      teamCards.innerHTML = "";
-
-      data.forEach(team => {
-        const card = document.createElement('div');
-        card.className = 'team-card';
-        card.innerHTML = `
-          <h3>${team["Team Name"]}</h3>
-          <div class="team-info">
-            <strong>Code:</strong> ${team["Team Code"] || "-"}<br>
-            <strong>Chest Start:</strong> ${team["Chest Number Starts From"] || "-"}
-          </div>
-        `;
-        teamCards.appendChild(card);
-      });
-    } catch (err) {
-      console.error("Fetch error:", err);
-      alert("Failed to load teams.");
-    }
-  }
-
-  async function addTeam() {
-    const name = document.getElementById('teamName').value.trim();
-    const code = document.getElementById('teamCode').value.trim();
-    const chest = document.getElementById('chestStart').value.trim();
-
-    if (!name || !code || !chest) {
-      alert("Please fill all fields.");
-      return;
-    }
-
-    const payload = {
-      type: "team",
-      data: {
-        "Team Name": name,
-        "Team Code": code,
-        "Chest Number Starts From": chest
+    async function fetchTeams() {
+      try {
+        const response = await fetch(`${API_URL}?type=team`);
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          const tbody = document.querySelector("#teamTable tbody");
+          tbody.innerHTML = "";
+          data.forEach(item => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${item["Team Name"] || ""}</td>
+              <td>${item["Team Code"] || ""}</td>
+              <td>${item["Chest Number Start From"] || ""}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        } else {
+          showMessage("Failed to load teams", true);
+        }
+      } catch (err) {
+        console.error(err);
+        showMessage("Error loading teams", true);
       }
-    };
-
-    try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await res.json();
-      if (result.status === "success") {
-        await fetchTeams(); // refresh grid
-        document.getElementById('teamName').value = "";
-        document.getElementById('teamCode').value = "";
-        document.getElementById('chestStart').value = "";
-        alert("Team added successfully.");
-      } else {
-        alert("Error: " + (result.message || "Unknown error"));
-      }
-    } catch (err) {
-      console.error("Add error:", err);
-      alert("Failed to add team.");
     }
-  }
 
-  document.addEventListener("DOMContentLoaded", fetchTeams);
-</script>
+    async function addTeam() {
+      const teamName = document.getElementById("teamName").value.trim();
+      const teamCode = document.getElementById("teamCode").value.trim();
+      const chestNumber = document.getElementById("chestNumber").value.trim();
 
+      if (!teamName || !teamCode || !chestNumber) {
+        showMessage("Please fill all fields", true);
+        return;
+      }
+
+      const payload = {
+        type: "team",
+        data: {
+          "Team Name": teamName,
+          "Team Code": teamCode,
+          "Chest Number Start From": chestNumber
+        }
+      };
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+          showMessage("Team added successfully!");
+          document.getElementById("teamName").value = "";
+          document.getElementById("teamCode").value = "";
+          document.getElementById("chestNumber").value = "";
+          fetchTeams(); // Refresh table
+        } else {
+          showMessage("Failed to add team: " + result.message, true);
+        }
+      } catch (err) {
+        console.error(err);
+        showMessage("Error adding team", true);
+      }
+    }
+
+    function showMessage(msg, isError = false) {
+      const el = document.getElementById("message");
+      el.textContent = msg;
+      el.className = isError ? "message error" : "message";
+    }
+
+    window.onload = fetchTeams;
+  </script>
 </body>
 </html>
