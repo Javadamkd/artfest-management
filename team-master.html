@@ -148,76 +148,80 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwM-_pZCeLqtHdwKOKlxwhUA2QsEFbLiUfUekM-IWnLh0N5xpFDpO_jtVuE_5QYnvog/exec"; // Replace this
+  const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; // Replace with actual deployment URL
 
-    async function fetchTeams() {
-      try {
-        const res = await fetch(API_URL + "?type=team");
-        const data = await res.json();
-        const teamCards = document.getElementById('teamCards');
-        teamCards.innerHTML = "";
+  async function fetchTeams() {
+    try {
+      const res = await fetch(`${API_URL}?type=team`);
+      const data = await res.json();
 
-        data.forEach(team => {
-          const card = document.createElement('div');
-          card.className = 'team-card';
-          card.innerHTML = 
-            <h3>${team["Team Name"]}</h3>
-            <div class="team-info">
-              <strong>Code:</strong> ${team["Team Code"] || "-"}<br>
-              <strong>Chest Start:</strong> ${team["Chest Number Starts From"] || "-"}
-            </div>
-          ;
-          teamCards.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Error loading teams:", err);
-      }
+      const teamCards = document.getElementById('teamCards');
+      teamCards.innerHTML = "";
+
+      data.forEach(team => {
+        const card = document.createElement('div');
+        card.className = 'team-card';
+        card.innerHTML = `
+          <h3>${team["Team Name"]}</h3>
+          <div class="team-info">
+            <strong>Code:</strong> ${team["Team Code"] || "-"}<br>
+            <strong>Chest Start:</strong> ${team["Chest Number Starts From"] || "-"}
+          </div>
+        `;
+        teamCards.appendChild(card);
+      });
+    } catch (err) {
+      console.error("Fetch error:", err);
+      alert("Failed to load teams.");
+    }
+  }
+
+  async function addTeam() {
+    const name = document.getElementById('teamName').value.trim();
+    const code = document.getElementById('teamCode').value.trim();
+    const chest = document.getElementById('chestStart').value.trim();
+
+    if (!name || !code || !chest) {
+      alert("Please fill all fields.");
+      return;
     }
 
-    async function addTeam() {
-      const name = document.getElementById('teamName').value.trim();
-      const code = document.getElementById('teamCode').value.trim();
-      const chest = document.getElementById('chestStart').value.trim();
-
-      if (!name || !code || !chest) {
-        alert("Please fill all fields.");
-        return;
+    const payload = {
+      type: "team",
+      data: {
+        "Team Name": name,
+        "Team Code": code,
+        "Chest Number Starts From": chest
       }
+    };
 
-      const payload = {
-        type: "team",
-        data: {
-          "Team Name": name,
-          "Team Code": code,
-          "Chest Number Starts From": chest
-        }
-      };
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
 
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: { "Content-Type": "application/json" }
-        });
-
-        const result = await res.json();
-        if (result.status === "success") {
-          fetchTeams();
-          document.getElementById("teamName").value = "";
-          document.getElementById("teamCode").value = "";
-          document.getElementById("chestStart").value = "";
-        } else {
-          alert("Error adding team.");
-        }
-      } catch (err) {
-        console.error("Add error:", err);
-        alert("Failed to save data.");
+      const result = await res.json();
+      if (result.status === "success") {
+        await fetchTeams(); // refresh grid
+        document.getElementById('teamName').value = "";
+        document.getElementById('teamCode').value = "";
+        document.getElementById('chestStart').value = "";
+        alert("Team added successfully.");
+      } else {
+        alert("Error: " + (result.message || "Unknown error"));
       }
+    } catch (err) {
+      console.error("Add error:", err);
+      alert("Failed to add team.");
     }
+  }
 
-    // Load teams on page load
-    document.addEventListener("DOMContentLoaded", fetchTeams);
-  </script>
+  document.addEventListener("DOMContentLoaded", fetchTeams);
+</script>
 
 </body>
 </html>
