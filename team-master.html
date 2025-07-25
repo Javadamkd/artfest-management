@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Team Master | Art Fest Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -85,13 +86,11 @@
     button:hover {
       background-color: #17a589;
     }
-
     .grid-cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 20px;
     }
-
     .team-card {
       background: white;
       padding: 16px;
@@ -107,7 +106,6 @@
       line-height: 1.5;
       font-size: 0.95rem;
     }
-
   </style>
 </head>
 <body>
@@ -145,14 +143,38 @@
     </div>
 
     <div class="grid-cards" id="teamCards">
-      <!-- Grid-style team cards will appear here -->
+      <!-- Team cards appear here -->
     </div>
   </div>
 
   <script>
-    const teamCards = document.getElementById('teamCards');
+    const API_URL = "https://script.google.com/macros/s/PASTE-YOUR-DEPLOYED-URL/exec"; // Replace this
 
-    function addTeam() {
+    async function fetchTeams() {
+      try {
+        const res = await fetch(API_URL + "?type=team");
+        const data = await res.json();
+        const teamCards = document.getElementById('teamCards');
+        teamCards.innerHTML = "";
+
+        data.forEach(team => {
+          const card = document.createElement('div');
+          card.className = 'team-card';
+          card.innerHTML = `
+            <h3>${team["Team Name"]}</h3>
+            <div class="team-info">
+              <strong>Code:</strong> ${team["Team Code"] || "-"}<br>
+              <strong>Chest Start:</strong> ${team["Chest Number Starts From"] || "-"}
+            </div>
+          `;
+          teamCards.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Error loading teams:", err);
+      }
+    }
+
+    async function addTeam() {
       const name = document.getElementById('teamName').value.trim();
       const code = document.getElementById('teamCode').value.trim();
       const chest = document.getElementById('chestStart').value.trim();
@@ -162,23 +184,39 @@
         return;
       }
 
-      const card = document.createElement('div');
-      card.className = 'team-card';
-      card.innerHTML = `
-        <h3>${name}</h3>
-        <div class="team-info">
-          <strong>Code:</strong> ${code}<br>
-          <strong>Chest Start:</strong> ${chest}
-        </div>
-      `;
+      const payload = {
+        type: "team",
+        data: {
+          "Team Name": name,
+          "Team Code": code,
+          "Chest Number Starts From": chest
+        }
+      };
 
-      teamCards.appendChild(card);
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: { "Content-Type": "application/json" }
+        });
 
-      // Clear inputs
-      document.getElementById('teamName').value = '';
-      document.getElementById('teamCode').value = '';
-      document.getElementById('chestStart').value = '';
+        const result = await res.json();
+        if (result.status === "success") {
+          fetchTeams();
+          document.getElementById("teamName").value = "";
+          document.getElementById("teamCode").value = "";
+          document.getElementById("chestStart").value = "";
+        } else {
+          alert("Error adding team.");
+        }
+      } catch (err) {
+        console.error("Add error:", err);
+        alert("Failed to save data.");
+      }
     }
+
+    // Load teams on page load
+    document.addEventListener("DOMContentLoaded", fetchTeams);
   </script>
 
 </body>
